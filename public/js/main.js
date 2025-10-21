@@ -393,8 +393,28 @@ function handleDrop(e) {
     const nodeHeight = 60; 
     const halfHeight = nodeHeight / 2;
     
-    let newX = 250; 
+    // Find the rightmost edge of any existing card at this year
+    let newX = 250; // Default position
     let newY = timelineY - halfHeight;
+    
+    // Find all cards at the same year
+    const cardsAtSameYear = mindMap.nodes.filter(node => 
+        node.type === 'cause' && node.year === year
+    );
+    
+    if (cardsAtSameYear.length > 0) {
+        // Find the rightmost edge of all cards at this year
+        let rightmostEdge = 0;
+        cardsAtSameYear.forEach(card => {
+            const cardRightEdge = card.x + nodeWidth;
+            if (cardRightEdge > rightmostEdge) {
+                rightmostEdge = cardRightEdge;
+            }
+        });
+        
+        // Place new card to the right of the rightmost card
+        newX = rightmostEdge + 10; // 10px gap
+    }
 
     const maxX = Math.max(0, canvasContainer.offsetWidth - nodeWidth);
     const maxY = Math.max(0, canvasContainer.offsetHeight - nodeHeight);

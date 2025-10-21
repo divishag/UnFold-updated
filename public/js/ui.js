@@ -532,7 +532,7 @@ function drawLinks(mindMapState, selectedNodeId) {
             // Get the actual timeline settings from the global variables
             // We need to calculate the timeline position for this specific year
             const timelineStartY = 180;
-            const yearSpacing = 100;
+            const yearSpacing = 120;
             
             // Get the timeline start and end years from the input fields
             const startYearInput = document.getElementById('start-year');
@@ -665,7 +665,7 @@ export function drawTimeline(mindMap) {
     
     const timelineHeight = canvas.offsetHeight - 200; // Leave more margin for root node
     const timelineStartY = 180; // Start timeline much lower below the root node
-    const yearSpacing = 100; // Increased spacing between years for better room
+    const yearSpacing = 120; // Increased spacing between years for better room
     
     // Get current timeline settings
     const startYearInput = document.getElementById('start-year');
@@ -698,7 +698,7 @@ export function drawTimeline(mindMap) {
         console.log('Creating year element for:', year, 'at position:', yPosition);
         
         const yearElement = document.createElement('div');
-        yearElement.className = `absolute text-xs font-semibold px-2 py-1 rounded cursor-pointer hover:bg-gray-700 ${
+        yearElement.className = `absolute text-sm font-semibold px-3 py-2 rounded cursor-pointer hover:bg-gray-700 ${
             isUsed ? 'text-yellow-300 bg-yellow-800' : 'text-blue-300 bg-gray-800'
         }`;
         yearElement.textContent = year;
@@ -741,7 +741,7 @@ export function updateCanvasHeight() {
     // Calculate required height based on timeline range
     const yearRange = timelineEndYear - timelineStartYear;
     const timelineStartY = 180; // Start position below root node
-    const yearSpacing = 100; // Spacing between years
+    const yearSpacing = 120; // Spacing between years
     const bottomMargin = 100; // Extra space at bottom
     
     // Calculate total required height
@@ -789,7 +789,7 @@ export function updateTimelineHighlighting(mindMap) {
         console.log('Updating year element:', year, 'isUsed:', isUsed);
         
         // Update year card styling
-        element.className = `absolute text-xs font-semibold px-2 py-1 rounded cursor-pointer hover:bg-gray-700 ${
+        element.className = `absolute text-sm font-semibold px-3 py-2 rounded cursor-pointer hover:bg-gray-700 ${
             isUsed ? 'text-yellow-300 bg-yellow-800' : 'text-blue-300 bg-gray-800'
         }`;
         
@@ -842,7 +842,7 @@ export function extractYearFromText(text) {
 
 export function getTimelinePosition(year) {
     const timelineStartY = 180; // Same offset as in drawTimeline
-    const yearSpacing = 100; // Same spacing as in drawTimeline
+    const yearSpacing = 120; // Same spacing as in drawTimeline
     
     // Get current timeline settings
     const startYearInput = document.getElementById('start-year');
@@ -873,7 +873,7 @@ export function findClosestYearLine(mouseY) {
     
     // Find the closest year line using the same logic as drawTimeline
     const timelineStartY = 180;
-    const yearSpacing = 100;
+    const yearSpacing = 120;
     
     let closestYear = null;
     let closestDistance = Infinity;
@@ -904,7 +904,8 @@ export function repositionNodesOnTimeline(mindMap) {
                 const halfHeight = nodeHeight / 2;
                 
                 node.y = getTimelinePosition(year) - halfHeight;
-                node.x = 250; // Position nodes to the right of timeline
+                // DON'T reset X position - preserve the carefully calculated positioning
+                // node.x = 250; // This was overriding our positioning logic
             }
         });
     }
