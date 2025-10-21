@@ -98,6 +98,24 @@ export function renderMindMapEditor(caseData, mindMapState, interactionHandlers,
 function populateEvidenceDrawer(evidence) {
     const list = document.getElementById('evidence-list');
     list.innerHTML = '';
+    
+    // Add "Add Evidence" button at the top
+    const addButton = document.createElement('div');
+    addButton.className = "bg-blue-600 text-white p-2 rounded-lg shadow-lg hover:bg-blue-500 transition duration-150 ease-in-out cursor-pointer border-l-4 border-blue-400 font-medium text-center mb-3";
+    addButton.innerHTML = `
+        <div class="flex items-center justify-center space-x-1">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span>Add Evidence</span>
+        </div>
+    `;
+    addButton.addEventListener('click', () => {
+        showAddEvidenceModal();
+    });
+    list.appendChild(addButton);
+    
+    // Add existing evidence cards
     evidence.forEach(item => {
         const card = document.createElement('div');
         card.className = "bg-gray-900 text-gray-100 p-3 rounded-lg shadow-lg hover:bg-gray-700 transition duration-150 ease-in-out cursor-grab border-l-4 border-yellow-500 font-medium";
@@ -113,6 +131,121 @@ function populateEvidenceDrawer(evidence) {
         });
         list.appendChild(card);
     });
+}
+
+// Function to show the add evidence modal
+function showAddEvidenceModal() {
+    // Create modal overlay
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    modalOverlay.id = 'evidence-modal-overlay';
+    
+    // Create modal content
+    const modalContent = document.createElement('div');
+    modalContent.className = 'bg-gray-800 rounded-xl p-6 w-96 max-w-md mx-4 shadow-2xl';
+    modalContent.innerHTML = `
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-yellow-300">Add Custom Evidence</h3>
+            <button id="close-modal" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">Evidence Description</label>
+                <textarea 
+                    id="evidence-text" 
+                    class="w-full p-3 bg-gray-700 text-white rounded-lg border border-gray-600 focus:ring-yellow-500 focus:border-yellow-500 resize-none" 
+                    rows="3" 
+                    placeholder="Enter your custom evidence..."
+                ></textarea>
+            </div>
+            <div class="flex space-x-3">
+                <button 
+                    id="add-evidence-btn" 
+                    class="flex-1 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition duration-150 font-medium"
+                >
+                    Add Evidence
+                </button>
+                <button 
+                    id="cancel-evidence-btn" 
+                    class="flex-1 bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-500 transition duration-150 font-medium"
+                >
+                    Cancel
+                </button>
+            </div>
+            <div class="text-xs text-gray-400 text-center">
+                Press Ctrl+Enter to add, Escape to cancel
+            </div>
+        </div>
+    `;
+    
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+    
+    // Add event listeners
+    document.getElementById('close-modal').addEventListener('click', closeEvidenceModal);
+    document.getElementById('cancel-evidence-btn').addEventListener('click', closeEvidenceModal);
+    document.getElementById('add-evidence-btn').addEventListener('click', addCustomEvidence);
+    
+    // Close modal when clicking overlay
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeEvidenceModal();
+        }
+    });
+    
+    // Keyboard support
+    const textarea = document.getElementById('evidence-text');
+    textarea.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.ctrlKey) {
+            addCustomEvidence();
+        }
+    });
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeEvidenceModal();
+        }
+    });
+    
+    // Focus on textarea
+    textarea.focus();
+}
+
+function closeEvidenceModal() {
+    const modal = document.getElementById('evidence-modal-overlay');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function addCustomEvidence() {
+    const evidenceText = document.getElementById('evidence-text').value.trim();
+    
+    if (!evidenceText) {
+        alert('Please enter evidence description');
+        return;
+    }
+    
+    // Add the custom evidence to the current case data
+    if (window.currentCaseData && window.currentCaseData.evidence) {
+        window.currentCaseData.evidence.push({ text: evidenceText });
+        
+        // Refresh the evidence drawer
+        populateEvidenceDrawer(window.currentCaseData.evidence);
+        
+        // Show success message
+        const successMsg = document.createElement('div');
+        successMsg.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+        successMsg.textContent = 'Custom evidence added successfully!';
+        document.body.appendChild(successMsg);
+        
+        setTimeout(() => {
+            successMsg.remove();
+        }, 3000);
+    }
+    
+    closeEvidenceModal();
 }
 
 /** Renders all chat elements and the submit/finalize controls. */
@@ -457,10 +590,21 @@ export function initializeTimeline() {
         endYearInput.value = 1990; // timelineEndYear
         
         console.log('Adding click listener to update button');
-        updateButton.addEventListener('click', updateTimeline);
+        updateButton.addEventListener('click', () => {
+            // Get the current mindMap and other required data from global scope
+            if (window.mindMap && window.interactionHandlers && window.selectedNodeId !== undefined && window.chatHistory && window.saveMindMapToServer && window.currentCase) {
+                updateTimeline(window.mindMap, window.interactionHandlers, window.selectedNodeId, window.chatHistory, window.saveMindMapToServer, window.currentCase);
+            } else {
+                console.error('Missing required data for timeline update');
+            }
+        });
         
         // Set initial canvas height
         updateCanvasHeight();
+        
+        // Draw timeline by default when page loads
+        console.log('Drawing initial timeline...');
+        drawTimeline(window.mindMap || { nodes: [], links: [] });
     } else {
         console.log('Some timeline elements not found, retrying in 100ms...');
         setTimeout(initializeTimeline, 100);

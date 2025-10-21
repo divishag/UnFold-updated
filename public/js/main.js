@@ -42,6 +42,9 @@ function showHomePage() {
 
 async function startMindMap(caseData) {
     currentCase = caseData;
+    
+    // Store case data globally for the modal to access
+    window.currentCaseData = caseData;
 
     document.getElementById('main-content').innerHTML = `
         <div class="text-center py-20">
@@ -85,8 +88,21 @@ async function loadAndRenderMindMap(caseData) {
         await saveMindMapToServer(caseData.id, mindMap);
     }
     
+    // Store variables globally for timeline update function
+    updateGlobalVariables();
+    
     console.log('Final mindMap before rendering:', mindMap);
     renderMindMapEditor(caseData, mindMap, interactionHandlers, chatHistory);
+}
+
+// Function to update global variables for timeline updates
+function updateGlobalVariables() {
+    window.mindMap = mindMap;
+    window.interactionHandlers = interactionHandlers;
+    window.selectedNodeId = selectedNodeId;
+    window.chatHistory = chatHistory;
+    window.saveMindMapToServer = saveMindMapToServer;
+    window.currentCase = currentCase;
 }
 
 // --- Replace the following API Calls with your server implementation ---
@@ -346,6 +362,7 @@ function handleNodeClick(nodeId) {
     
     // MODIFIED: Pass chatHistory to drawCanvasElements
     drawCanvasElements(mindMap, interactionHandlers, selectedNodeId, chatHistory);
+    updateGlobalVariables();
 }
 
 function handleDrop(e) {
@@ -423,6 +440,7 @@ function handleDeleteNode(nodeId) {
     // MODIFIED: Pass chatHistory to drawCanvasElements
     drawCanvasElements(mindMap, interactionHandlers, selectedNodeId, chatHistory);
     saveMindMapToServer(currentCase.id, mindMap);
+    updateGlobalVariables();
 }
 
 // ===================================
