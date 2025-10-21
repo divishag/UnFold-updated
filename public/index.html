@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Vidhyalaya Detective App</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body class="p-4 bg-gray-950 min-h-screen text-gray-100 antialiased">
+
+    <header class="mb-8 text-3xl font-extrabold text-yellow-500 tracking-wider flex justify-between items-center">
+        <span>E-Vidhyalaya Detective 🕵️</span>
+        <button 
+            id="back-to-home" 
+            class="hidden text-sm bg-gray-800 hover:bg-gray-700 py-1 px-3 rounded-full border border-gray-600 transition duration-150"
+        >
+            ← Back to Case Selection
+        </button>
+    </header>
+
+    <div id="main-content" class="text-center py-20">
+        <div class="spinner"></div>
+        <p class="mt-4 text-gray-400">Initializing Database and Authentication...</p>
+    </div>
+
+    <footer class="mt-8 text-center text-sm text-gray-500 pt-2 border-t border-gray-800">
+        Investigate, Connect, Solve.
+    </footer>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

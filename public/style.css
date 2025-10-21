@@ -1,0 +1,53 @@
+body { 
+    font-family: 'Inter', sans-serif; 
+}
+
+/* Robust CSS for Grid Layout (Used for the Mind Map Editor view) */
+.main-content-grid-robust {
+    display: grid;
+    grid-template-columns: 250px 1fr 350px;
+    height: calc(100vh - 100px); 
+    gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+    .main-content-grid-robust {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .mind-map-canvas-container {
+        min-height: 500px;
+    }
+}
+
+/* Custom scrollbar for Evidence and Chat panes */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #1f2937; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 3px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+
+.mind-map-canvas-container {
+    cursor: default;
+    touch-action: none; 
+}
+
+/* Basic node reset for absolute positioning */
+.node-base {
+    position: absolute;
+    z-index: 10;
+}
+
+/* Simple loading spinner */
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-left-color: #fcd34d;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

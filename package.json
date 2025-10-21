@@ -1,0 +1,30 @@
+{
+  "name": "unfold-hackathon-e-vihack",
+  "version": "1.0.0",
+  "description": "",
+  "main": "config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DHRITIRAJESH/Unfold-E-viHack.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/DHRITIRAJESH/Unfold-E-viHack/issues"
+  },
+  "homepage": "https://github.com/DHRITIRAJESH/Unfold-E-viHack#readme",
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "node-fetch": "^3.3.2",
+    "openai": "^6.6.0"
+  }
+}
